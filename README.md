@@ -1,2 +1,3 @@
 # component-s3bucket
-S3 bucket abstraction
+
+Abstraction for setting up an S3 bucket and related resources. 
