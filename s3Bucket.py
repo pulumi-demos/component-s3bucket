@@ -88,7 +88,6 @@ class S3Bucket(pulumi.ComponentResource):
             },
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -100,7 +99,6 @@ class S3Bucket(pulumi.ComponentResource):
             ),
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -113,7 +111,6 @@ class S3Bucket(pulumi.ComponentResource):
             restrict_public_buckets=True,
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -123,7 +120,6 @@ class S3Bucket(pulumi.ComponentResource):
             acl="log-delivery-write",
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
                 depends_on=[log_bucket_ownership_controls, log_bucket_public_access_block],
             ),
         )
@@ -138,7 +134,6 @@ class S3Bucket(pulumi.ComponentResource):
             },
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -151,7 +146,6 @@ class S3Bucket(pulumi.ComponentResource):
             ),
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -170,7 +164,6 @@ class S3Bucket(pulumi.ComponentResource):
             ],
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -184,7 +177,6 @@ class S3Bucket(pulumi.ComponentResource):
             restrict_public_buckets=True,
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -197,7 +189,6 @@ class S3Bucket(pulumi.ComponentResource):
             ),
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -216,7 +207,6 @@ class S3Bucket(pulumi.ComponentResource):
             ],
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -262,7 +252,6 @@ class S3Bucket(pulumi.ComponentResource):
             ],
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
                 depends_on=[bucket_versioning],
             ),
         )
@@ -275,7 +264,6 @@ class S3Bucket(pulumi.ComponentResource):
             target_prefix="s3-access-logs/",
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
                 depends_on=[log_bucket_acl],
             ),
         )
@@ -286,7 +274,6 @@ class S3Bucket(pulumi.ComponentResource):
             tags={"Environment": environment},
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -311,7 +298,6 @@ class S3Bucket(pulumi.ComponentResource):
             ),
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
             ),
         )
 
@@ -326,7 +312,6 @@ class S3Bucket(pulumi.ComponentResource):
             ],
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
                 depends_on=[notification_topic],
             ),
         )
@@ -362,15 +347,13 @@ class S3Bucket(pulumi.ComponentResource):
             ),
             opts=pulumi.ResourceOptions(
                 parent=self,
-                # aliases=[pulumi.Alias(parent=None)],
                 depends_on=[bucket_pab, bucket_ownership],
             ),
         )
 
         self.bucket_id = bucket.id
         self.bucket_arn = bucket.arn
-        # self.bucket_domain_name = bucket.bucket_domain_name
-        self.bucket_domain_name = "This is a post v0.1.0 version change"
+        self.bucket_domain_name = bucket.bucket_domain_name
         self.bucket_regional_domain_name = bucket.bucket_regional_domain_name
         self.log_bucket_id = log_bucket.id
         self.log_bucket_arn = log_bucket.arn
