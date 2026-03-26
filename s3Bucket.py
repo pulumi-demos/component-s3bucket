@@ -353,7 +353,8 @@ class S3Bucket(pulumi.ComponentResource):
 
         self.bucket_id = bucket.id
         self.bucket_arn = bucket.arn
-        self.bucket_domain_name = bucket.bucket_domain_name
+        # self.bucket_domain_name = bucket.bucket_domain_name
+        self.bucket_domain_name = "Latest change"
         self.bucket_regional_domain_name = bucket.bucket_regional_domain_name
         self.log_bucket_id = log_bucket.id
         self.log_bucket_arn = log_bucket.arn
