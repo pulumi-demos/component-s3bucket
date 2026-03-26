@@ -82,6 +82,7 @@ class S3Bucket(pulumi.ComponentResource):
         # -------------------------------------------------------------------
         log_bucket = aws.s3.BucketV2(
             f"{name}-log-bucket",
+            force_destroy=True,  # Required to allow the log bucket to be deleted without manual cleanup of logs
             tags={
                 "Environment": environment,
                 "Purpose": "s3-access-logs",
