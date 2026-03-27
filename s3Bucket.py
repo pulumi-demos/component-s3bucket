@@ -80,7 +80,7 @@ class S3Bucket(pulumi.ComponentResource):
         # -------------------------------------------------------------------
         # Logging bucket
         # -------------------------------------------------------------------
-        log_bucket = aws.s3.BucketV2(
+        log_bucket = aws.s3.Bucket(
             f"{name}-log-bucket",
             force_destroy=True,  # Required to allow the log bucket to be deleted without manual cleanup of logs
             tags={
@@ -115,7 +115,7 @@ class S3Bucket(pulumi.ComponentResource):
             ),
         )
 
-        log_bucket_acl = aws.s3.BucketAclV2(
+        log_bucket_acl = aws.s3.BucketAcl(
             f"{name}-log-bucket-acl",
             bucket=log_bucket.id,
             acl="log-delivery-write",
@@ -128,7 +128,7 @@ class S3Bucket(pulumi.ComponentResource):
         # -------------------------------------------------------------------
         # Main bucket
         # -------------------------------------------------------------------
-        bucket = aws.s3.BucketV2(
+        bucket = aws.s3.Bucket(
             f"{name}-bucket",
             tags={
                 "Environment": environment,
@@ -139,10 +139,10 @@ class S3Bucket(pulumi.ComponentResource):
         )
 
         # Versioning
-        bucket_versioning = aws.s3.BucketVersioningV2(
+        bucket_versioning = aws.s3.BucketVersioning(
             f"{name}-bucket-versioning",
             bucket=bucket.id,
-            versioning_configuration=aws.s3.BucketVersioningV2VersioningConfigurationArgs(
+            versioning_configuration=aws.s3.BucketVersioningVersioningConfigurationArgs(
                 status="Enabled" if versioning_enabled else "Suspended",
             ),
             opts=pulumi.ResourceOptions(
@@ -151,12 +151,12 @@ class S3Bucket(pulumi.ComponentResource):
         )
 
         # Server-side encryption
-        aws.s3.BucketServerSideEncryptionConfigurationV2(
+        aws.s3.BucketServerSideEncryptionConfiguration(
             f"{name}-bucket-encryption",
             bucket=bucket.id,
             rules=[
-                aws.s3.BucketServerSideEncryptionConfigurationV2RuleArgs(
-                    apply_server_side_encryption_by_default=aws.s3.BucketServerSideEncryptionConfigurationV2RuleApplyServerSideEncryptionByDefaultArgs(
+                aws.s3.BucketServerSideEncryptionConfigurationRuleArgs(
+                    apply_server_side_encryption_by_default=aws.s3.BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefaultArgs(
                         sse_algorithm=sse_algorithm,
                         kms_master_key_id=kms_master_key_id,
                     ),
@@ -194,11 +194,11 @@ class S3Bucket(pulumi.ComponentResource):
         )
 
         # CORS
-        aws.s3.BucketCorsConfigurationV2(
+        aws.s3.BucketCorsConfiguration(
             f"{name}-bucket-cors",
             bucket=bucket.id,
             cors_rules=[
-                aws.s3.BucketCorsConfigurationV2CorsRuleArgs(
+                aws.s3.BucketCorsConfigurationCorsRuleArgs(
                     allowed_headers=["*"],
                     allowed_methods=["GET", "HEAD", "PUT", "POST", "DELETE"],
                     allowed_origins=cors_allowed_origins,
@@ -212,41 +212,41 @@ class S3Bucket(pulumi.ComponentResource):
         )
 
         # Lifecycle
-        aws.s3.BucketLifecycleConfigurationV2(
+        aws.s3.BucketLifecycleConfiguration(
             f"{name}-bucket-lifecycle",
             bucket=bucket.id,
             rules=[
-                aws.s3.BucketLifecycleConfigurationV2RuleArgs(
+                aws.s3.BucketLifecycleConfigurationRuleArgs(
                     id="transition-current-objects",
                     status="Enabled",
                     transitions=[
-                        aws.s3.BucketLifecycleConfigurationV2RuleTransitionArgs(
+                        aws.s3.BucketLifecycleConfigurationRuleTransitionArgs(
                             days=30, storage_class="STANDARD_IA",
                         ),
-                        aws.s3.BucketLifecycleConfigurationV2RuleTransitionArgs(
+                        aws.s3.BucketLifecycleConfigurationRuleTransitionArgs(
                             days=90, storage_class="GLACIER",
                         ),
-                        aws.s3.BucketLifecycleConfigurationV2RuleTransitionArgs(
+                        aws.s3.BucketLifecycleConfigurationRuleTransitionArgs(
                             days=365, storage_class="DEEP_ARCHIVE",
                         ),
                     ],
                 ),
-                aws.s3.BucketLifecycleConfigurationV2RuleArgs(
+                aws.s3.BucketLifecycleConfigurationRuleArgs(
                     id="expire-noncurrent-versions",
                     status="Enabled",
                     noncurrent_version_transitions=[
-                        aws.s3.BucketLifecycleConfigurationV2RuleNoncurrentVersionTransitionArgs(
+                        aws.s3.BucketLifecycleConfigurationRuleNoncurrentVersionTransitionArgs(
                             noncurrent_days=30, storage_class="STANDARD_IA",
                         ),
                     ],
-                    noncurrent_version_expiration=aws.s3.BucketLifecycleConfigurationV2RuleNoncurrentVersionExpirationArgs(
+                    noncurrent_version_expiration=aws.s3.BucketLifecycleConfigurationRuleNoncurrentVersionExpirationArgs(
                         noncurrent_days=90,
                     ),
                 ),
-                aws.s3.BucketLifecycleConfigurationV2RuleArgs(
+                aws.s3.BucketLifecycleConfigurationRuleArgs(
                     id="abort-incomplete-multipart-uploads",
                     status="Enabled",
-                    abort_incomplete_multipart_upload=aws.s3.BucketLifecycleConfigurationV2RuleAbortIncompleteMultipartUploadArgs(
+                    abort_incomplete_multipart_upload=aws.s3.BucketLifecycleConfigurationRuleAbortIncompleteMultipartUploadArgs(
                         days_after_initiation=7,
                     ),
                 ),
@@ -258,7 +258,7 @@ class S3Bucket(pulumi.ComponentResource):
         )
 
         # Access logging
-        aws.s3.BucketLoggingV2(
+        aws.s3.BucketLogging(
             f"{name}-bucket-logging",
             bucket=bucket.id,
             target_bucket=log_bucket.id,
